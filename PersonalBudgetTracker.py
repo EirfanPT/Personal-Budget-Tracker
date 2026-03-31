@@ -6,7 +6,6 @@ st.set_page_config(page_title="Expense Tracker")
 
 # Title
 st.markdown("##  Daily Expense Tracker")
-st.write("Keep track of your daily spending easily!")
 
 # Initialize session state
 if "expenses" not in st.session_state:
