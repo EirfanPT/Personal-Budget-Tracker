@@ -1,55 +1,67 @@
 import streamlit as st
 import pandas as pd
 
+# Page config
+st.set_page_config(page_title="Expense Tracker", page_icon="📊")
+
 # Title
-st.title("Personal Budget Tracker")
+st.markdown("## 📊 Daily Expense Tracker")
+st.write("Keep track of your daily spending easily!")
 
 # Initialize session state
 if "expenses" not in st.session_state:
     st.session_state.expenses = []
 
-# Section: Add Expense
-st.header("Add a New Expense")
+# --- INPUT SECTION ---
+st.markdown("### ➕ Enter Expense Details")
 
-with st.form("expense_form"):
-    date = st.date_input("Date", value=None)  # ✅ Set to None to make it blank
-    item = st.text_input("Expense Item")
-    amount = st.text_input("Amount Spent (RM)")
+col1, col2 = st.columns(2)
 
-    submit = st.form_submit_button("Add Expense")
+with col1:
+    date = st.date_input("Select Date", value=None)
 
-    if submit:
-        try:
-            # Check if date is empty
-            if date is None:
-                raise ValueError("Date is required")
+with col2:
+    item = st.text_input("Expense Name")
 
-            amount = float(amount)
+amount = st.text_input("Amount (RM)")
 
-            if amount < 0:
-                raise ValueError("Negative value")
+# Submit button outside form (different style)
+if st.button("Save Expense"):
+    try:
+        if date is None or item.strip() == "":
+            raise ValueError
 
-            # Save expense
-            st.session_state.expenses.append({
-                "Date": date,
-                "Expense Item": item,
-                "Amount Spent (RM)": amount
-            })
+        amount = float(amount)
 
-            st.success(f"✅ Expense '{item}' added successfully!")
+        if amount < 0:
+            raise ValueError
 
-        except:
-            st.error("❌ Error: Please enter a valid date and positive amount!")
+        # Store data
+        st.session_state.expenses.append({
+            "Date": date,
+            "Item": item,
+            "Amount (RM)": amount
+        })
 
-# Section: Expense Summary
-st.header("Expense Summary")
+        st.success(f"Added: {item} (RM {amount:.2f})")
+
+    except:
+        st.warning("⚠ Please enter valid data (non-empty item, valid date, positive number).")
+
+# --- DISPLAY SECTION ---
+st.markdown("---")
+st.markdown("### 📋 Recorded Expenses")
 
 if st.session_state.expenses:
     df = pd.DataFrame(st.session_state.expenses)
 
-    st.table(df)
+    # Display dataframe instead of table (more interactive)
+    st.dataframe(df, use_container_width=True)
 
-    total = df["Amount Spent (RM)"].sum()
-    st.subheader(f"Total Expenses: RM {total:.2f}")
+    # Total calculation
+    total = df["Amount (RM)"].sum()
+
+    st.markdown(f"### 💵 Total Spending: RM {total:.2f}")
+
 else:
-    st.info("No expenses recorded yet.")
+    st.info("No data yet. Start adding your expenses!")
