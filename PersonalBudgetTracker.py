@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 
 # Page config
-st.set_page_config(page_title="Expense Tracker", page_icon="📊")
+st.set_page_config(page_title="Expense Tracker")
 
 # Title
-st.markdown("## 📊 Daily Expense Tracker")
+st.markdown("##  Daily Expense Tracker")
 st.write("Keep track of your daily spending easily!")
 
 # Initialize session state
@@ -13,7 +13,7 @@ if "expenses" not in st.session_state:
     st.session_state.expenses = []
 
 # --- INPUT SECTION ---
-st.markdown("### ➕ Enter Expense Details")
+st.markdown("###  Enter Expense Details")
 
 col1, col2 = st.columns(2)
 
@@ -50,7 +50,7 @@ if st.button("Save Expense"):
 
 # --- DISPLAY SECTION ---
 st.markdown("---")
-st.markdown("### 📋 Recorded Expenses")
+st.markdown("###  Recorded Expenses")
 
 if st.session_state.expenses:
     df = pd.DataFrame(st.session_state.expenses)
@@ -61,7 +61,7 @@ if st.session_state.expenses:
     # Total calculation
     total = df["Amount (RM)"].sum()
 
-    st.markdown(f"### 💵 Total Spending: RM {total:.2f}")
+    st.markdown(f"###  Total Spending: RM {total:.2f}")
 
 else:
     st.info("No data yet. Start adding your expenses!")
