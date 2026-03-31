@@ -4,7 +4,7 @@ import pandas as pd
 # Title
 st.title("💰 Personal Budget Tracker")
 
-# Initialize session state to store expenses
+# Initialize session state
 if "expenses" not in st.session_state:
     st.session_state.expenses = []
 
@@ -12,7 +12,7 @@ if "expenses" not in st.session_state:
 st.header("Add a New Expense")
 
 with st.form("expense_form"):
-    date = st.date_input("Date")
+    date = st.date_input("Date", value=None)  # ✅ Set to None to make it blank
     item = st.text_input("Expense Item")
     amount = st.text_input("Amount Spent (RM)")
 
@@ -20,6 +20,10 @@ with st.form("expense_form"):
 
     if submit:
         try:
+            # Check if date is empty
+            if date is None:
+                raise ValueError("Date is required")
+
             amount = float(amount)
 
             if amount < 0:
@@ -35,7 +39,7 @@ with st.form("expense_form"):
             st.success(f"✅ Expense '{item}' added successfully!")
 
         except:
-            st.error("❌ Error: Amount must be a positive number!")
+            st.error("❌ Error: Please enter a valid date and positive amount!")
 
 # Section: Expense Summary
 st.header("Expense Summary")
@@ -43,12 +47,9 @@ st.header("Expense Summary")
 if st.session_state.expenses:
     df = pd.DataFrame(st.session_state.expenses)
 
-    # Display table
     st.table(df)
 
-    # Calculate total
     total = df["Amount Spent (RM)"].sum()
-
     st.subheader(f"Total Expenses: RM {total:.2f}")
 else:
     st.info("No expenses recorded yet.")
