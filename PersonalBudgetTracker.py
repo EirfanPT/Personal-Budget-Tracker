@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Title
-st.title("💰 Personal Budget Tracker")
+st.title("Personal Budget Tracker")
 
 # Initialize session state
 if "expenses" not in st.session_state:
